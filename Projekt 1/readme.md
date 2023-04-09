@@ -226,14 +226,31 @@ Wykorzystując wzór na błąd Epsilon od liczby równań n w postaci $\varepsil
 
 Implementacja powyższej wizualizacji znajduje się w pliku [plotZEpsilon](plotZEpsilon.m)
 
-Dokonując konkatenacji z rezultatami z Zadania 1 i wynikami dla solvera GS o implementacji w pliku [plotConcatenate](plotConcatenate.m)otrzymać można następujące przebiegi:
+Dokonując konkatenacji z rezultatami z Zadania 1 i wynikami dla solvera GS o implementacji w pliku [plotConcatenate](plotConcatenate.m) otrzymać można następujące przebiegi:
 
 ![](Z2ConcatenateLog.png)
 
-**Uwaga! Skala Y jest logarytmiczna**
+**Uwaga!** Skala Y jest logarytmiczna
 
 ### Wnioski
 1. Macierz z Zadania 2 nie jest macierzą o dominacji diagonalnej, w związku z czym nie można zastosować do niej metody Gaussa-Seidla.
 2. Wykorzystanie rozkładu $LDL^t$ dla macierzy z obu zadań działało relatywnie efektywnie, osiągając dla przykłądowych N $/eps < 10^(-10)$ co przy danych całkowitych jest rozsądnym wynikiem.
 3. Zarówno błąd jak i czas obliczeń metodą rozkładu $LDL^t$ zdają się pozostawać w relatywnie liniowym stosunku zarówno do siebie jak i do ilości równań n.
 4. Metoda Gaussa-Seidla działa zauważalnie wolniej i z zauważalnie większym błędem niż rozkład $LDL^t$.
+
+## Zadanie 3
+
+### Treść
+Dla podanych w tabeli danych pomiarowych (próbek) metodą najmniejszych kwadratów należy wyznaczyć funkcję wielomianową y = f(x) (tzn. wektor współczynników) najlepiej aproksymującą te dane.
+Proszę przetestować wielomiany stopni: 3, 5, 7, 9, 10, 11. Kod aproksymujący powinien być uniwersalną procedurą w Matlabie o odpowiednich parametrach wejścia i wyjścia. Do rozwiązania zadania najmniejszych kwadratów proszę wykorzystać:
+a. Układ równań normalnych i swój solwer z p. 1,
+b. Układ równań normalnych i solwer GS.m,
+c. Rozkład SVD; do faktoryzacji użyć odpowiedniego solwera Matlaba.
+Obliczać błąd aproksymacji w normach euklidesowej ∥.∥2 oraz maksimum ∥.∥∞ (proszę użyć funkcji norm(.,inf)), porównać efektywność trzech podejść. Przedstawić na rysunku otrzymane funkcje na tle danych (funkcję aproksymującą proszę próbkować przynajmniej 10 razy częściej niż dane). Do liczenia wartości wielomianu użyć funkcji polyval. Skomentować.
+
+### Dane
+#### Punkty do aproksymacji
+
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| $x_i$ | -10 | -8 | -6 | -4 | -2 | 0 | 2 | 4 | 6 | 8 | 10 |
+| $y_i$ | 39.655 | 14.615 | 2.613 | -1.011 | -0.839 | 0.550 | -0.045 | -1.870 | -4.916 | -3.668 | 2.008 |
