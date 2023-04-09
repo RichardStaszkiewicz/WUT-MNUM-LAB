@@ -1,7 +1,23 @@
-function plotZ1Epsilon(iter)
+function plotZEpsilon(generate_A, generate_B, iter)
     N = [5 10 25 50 100 200];
-    % iter = 5;
+    [EA, TA] = analyzeAlgorithm(generate_A, generate_B, iter, N);
+    
+    tiledlayout(2, 1);
+    
+    nexttile
+    plot(N, EA);
+    title('Błąd Epsilon od liczby równań n');
+    xlabel('n');
+    ylabel('epsilon');
 
+    nexttile
+    plot(N, TA);
+    title('Czas wykonania od liczby równań n');
+    xlabel('n');
+    ylabel('czas');
+end
+
+function [EA, TA] = analyzeAlgorithm(generate_A, generate_B, iter, N)
     EA = zeros(size(N));
     TA = zeros(size(N));
 
@@ -22,20 +38,6 @@ function plotZ1Epsilon(iter)
 
     EA = EA / iter;
     TA = TA / iter;
-
-    tiledlayout(2, 1);
-    
-    nexttile
-    plot(N, EA);
-    title('Błąd Epsilon od liczby równań n');
-    xlabel('n');
-    ylabel('epsilon');
-
-    nexttile
-    plot(N, TA);
-    title('Czas wykonania od liczby równań n');
-    xlabel('n');
-    ylabel('czas');
 end
 
 function [epsilon, time] = solveAndGetEpsilon(A, b)

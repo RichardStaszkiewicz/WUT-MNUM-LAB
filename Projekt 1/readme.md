@@ -3,8 +3,18 @@ _Richard Staszkiewicz idx. 310918_
 
 <!-- https://snip.mathpix.com/2barti2/notes/f1b9f837-1234-4295-99ed-258c7a7ed446/edit -->
 
-## Dane
-### Macierz A
+## Zadanie 1
+### Treść
+Napisać uniwersalną procedurę w Matlabie o odpowiednich parametrach wejścia i wyjścia (solwer),
+rozwiązującą układ n równań liniowych Ax = b, gdzie x, b ∈ Rn, wykorzystując podaną metodę. 
+Nie sprawdzać w procedurze, czy dana macierz A spełnia wymagania stosowalności metody. 
+Zakazane jest użycie jakichkolwiek solwerów w środku. Obliczyć błąd rozwiązania ε = ∥A˜x − b∥2 (skorzystać
+z funkcji norm Matlaba).
+Metoda: faktoryzacji LDLT
+Proszę wykonać wykresy zależności czasu obliczeń i błędu ε od liczby równań n. Skomentować wyniki
+
+### Dane
+#### Macierz A
 
 $$
 \begin{equation}
@@ -15,7 +25,7 @@ $$
 \end{equation}
 $$
 
-Implementacja generacji znajduje się w pliku [Generate_A](generate_A.m)
+Implementacja generacji znajduje się w pliku [Generate_A1](generate_A1.m)
 
 Przykładowa macierz A dla n = 5:
 ```
@@ -30,7 +40,7 @@ Cechy:Symetryczna, Silna dominacja diagonalna
 
 Dominacja diagonalna została zweryfikowana z pomocą funkcji zaimplementowanej w pliku [testDiagonalDomminance](testDiagonalDomminance.m), która zwróciła dla każdej wartości n wartość True.
 
-### Macierz b
+#### Macierz b
 
 $$
 \begin{equation}
@@ -38,7 +48,7 @@ $$
 \end{equation}
 $$
 
-Implementacja generacji znajduje się w pliku [Generate_B](generate_B.m)
+Implementacja generacji znajduje się w pliku [Generate_B1](generate_B1.m)
 
 Przykładowa macierz b dla n = 5:
 ```
@@ -49,18 +59,8 @@ Przykładowa macierz b dla n = 5:
     5.5000
 ```
 
-### Wartości n
+#### Wartości n
 n = 5, 10, 25, 50, 100, 200
-
-## Zadanie 1
-### Treść
-Napisać uniwersalną procedurę w Matlabie o odpowiednich parametrach wejścia i wyjścia (solwer),
-rozwiązującą układ n równań liniowych Ax = b, gdzie x, b ∈ Rn, wykorzystując podaną metodę. 
-Nie sprawdzać w procedurze, czy dana macierz A spełnia wymagania stosowalności metody. 
-Zakazane jest użycie jakichkolwiek solwerów w środku. Obliczyć błąd rozwiązania ε = ∥A˜x − b∥2 (skorzystać
-z funkcji norm Matlaba).
-Metoda: faktoryzacji LDLT
-Proszę wykonać wykresy zależności czasu obliczeń i błędu ε od liczby równań n. Skomentować wyniki
 
 ### Rozwiązanie
 Z treści wynika że nie należy sprawdzać symetryczności i dodatniego określenia macierzy A.  Wynik zostaje wyznaczony na podstawie rozwiązania układów równań z macierzami trójkątnymi:
@@ -152,5 +152,88 @@ Implementacja powyższego algorytmu znajduje się w pliku [solveUpperTriangle](s
 ### Obliczanie błędu i reprezentacja graficzna
 Wykorzystując wzór na błąd Epsilon od liczby równań n w postaci $\varepsilon = ∥A\tilde{x} − b∥_2$ i funkcji wbudowanych Matlaba do wizualizacji otrzymano następujące przebiegi:
 
+![](Z1Epsilon.png)
 
-Implementacja powyższej wizualizacji znajduje się w pliku [plotZ1Epsilon](plotZ1Epsilon.m)
+Implementacja powyższej wizualizacji znajduje się w pliku [plotZEpsilon](plotZEpsilon.m)
+
+## Zadanie 2
+### Treść
+Wykonać eksperymenty takie jak w p. 1 dla macierzy A i wektorów b danych wzorami:
+aii = −12; aij = 4.5, j = i ± 2; aij = 0 dla pozostałych; bi = −3.5 + 0.5i, używając swojego
+solwera z p. 1 oraz solwera GS.m ze strony przedmiotu, będącego implementacją metody Gaussa-
+Seidela. Przyjąć itmax=1000 · n, delta=10−8 ≜ 1e − 8. Przedstawić wyniki (dokładności i czasy) w
+tabelach i wykresach, porównać je i skomentować.
+
+### Dane
+#### Macierz A
+
+$$
+\begin{equation}
+  a_{ij} = \begin{cases}
+    -12, & \text{dla $j = i$}\\
+    4.5, & \text{dla $j = i \pm 2$}\\
+    0, & \text{dla pozostałych}
+  \end{cases}
+\end{equation}
+$$
+
+Implementacja generacji znajduje się w pliku [Generate_A2](generate_A2.m)
+
+Przykładowa macierz A dla n = 5:
+```
+  -12.0000    4.5000    4.5000         0         0
+    4.5000  -12.0000    4.5000    4.5000         0
+    4.5000    4.5000  -12.0000    4.5000    4.5000
+         0    4.5000    4.5000  -12.0000    4.5000
+         0         0    4.5000    4.5000  -12.0000
+```
+
+Cechy:Symetryczna, wstęgowa
+
+Dominacja diagonalna została zweryfikowana z pomocą funkcji zaimplementowanej w pliku [testDiagonalDomminance](testDiagonalDomminance.m), która zwróciła dla każdej wartości n wartość False.
+
+
+#### Macierz b
+
+$$
+\begin{equation}
+  b_{i} = -3.5 + 0.5i
+\end{equation}
+$$
+
+Implementacja generacji znajduje się w pliku [Generate_B2](generateB2.m)
+
+Przykładowa macierz b dla n = 5:
+```
+   -3.0000
+   -2.5000
+   -2.0000
+   -1.5000
+   -1.0000
+```
+
+
+#### Wartości n
+n = 5, 10, 25, 50, 100, 200
+
+### Rozwiązanie
+Do zadanych A i b zastosowano omówiony w pkt. 1 solver [solveLDLt](solveLDLt.m) oraz udostępniony na stronie przedmiotu solver [GS](GS.m).
+
+### Obliczanie błędu i reprezentacja graficzna
+Wykorzystując wzór na błąd Epsilon od liczby równań n w postaci $\varepsilon = ∥A\tilde{x} − b∥_2$ i funkcji wbudowanych Matlaba do wizualizacji otrzymano następujące przebiegi:
+
+![](Z2Epsilon.png)
+
+Implementacja powyższej wizualizacji znajduje się w pliku [plotZEpsilon](plotZEpsilon.m)
+
+Dokonując konkatenacji z rezultatami z Zadania 1 i wynikami dla solvera GS o implementacji w pliku [plotConcatenate](plotConcatenate.m)otrzymać można następujące przebiegi:
+
+![](Z2ConcatenateLog.png)
+
+**Uwaga! Skala Y jest logarytmiczna**
+
+### Wnioski
+1. Macierz z Zadania 2 nie jest macierzą o dominacji diagonalnej, w związku z czym nie można zastosować do niej metody Gaussa-Seidla.
+2. Wykorzystanie rozkładu $LDL^t$ dla macierzy z obu zadań działało relatywnie efektywnie, osiągając dla przykłądowych N $/eps < 10^(-10)$ co przy danych całkowitych jest rozsądnym wynikiem.
+3. Zarówno błąd jak i czas obliczeń metodą rozkładu $LDL^t$ zdają się pozostawać w relatywnie liniowym stosunku zarówno do siebie jak i do ilości równań n.
+4. Metoda Gaussa-Seidla działa zauważalnie wolniej i z zauważalnie większym błędem niż rozkład $LDL^t$.

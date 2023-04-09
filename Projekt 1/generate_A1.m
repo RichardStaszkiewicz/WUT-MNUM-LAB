@@ -1,4 +1,4 @@
-function [A] = generate_A(n)
+function [A] = generate_A1(n)
     A = zeros(n, n);
 
     for i = 1 : n
