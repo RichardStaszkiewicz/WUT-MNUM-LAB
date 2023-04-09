@@ -261,3 +261,24 @@ $S_p$ = {3, 5, 7, 9, 10}
 
 ### Rozwiązanie
 
+#### Metoda Najmniejszych Kwadratów
+Metoda Najmniejszych Kwadratów jest statystyczną procedurą znajdowania linii najlepszego dopasowania. Minimalizuje ona błąd średniokwadratowy między znalezionym rozwiązaniem a zadanymi w próbie wartościami przy podanym stopniu rozwiązania D.
+
+$ \forall x \in \mathbb{R}  || b - A \hat{x} \leqslant b - A x || $
+
+#### Układ równań normalnych
+Metoda układu równań normalnych wymaga rozwiązania układu równań $ A^t A \hat{x} = A^t b $ gdzie macierz $ A $ jest macierzą współczynników wyznaczaną na podstawie zadanych wartości X:
+
+$ A_{ij} = {x_i}^j $
+
+Wektor $ b $ jest równy wektorowi $ y^T $.
+Implementacja znajdowania macierzy współczynników znajduje się w pliku [generate_A3](generate_A3.m).
+Implementacja aproksymacji układami równań normalnych znajduje się w pliku [approximateNormal](approximateNormal.m).
+
+#### Rozkład SVD
+Metoda aproksymacji z użyciem rozkładu SVD macierzy A polega na rozwiązaniu układu:
+
+$$
+\hat{x} = A^{+} 
+
+
