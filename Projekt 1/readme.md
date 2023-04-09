@@ -82,3 +82,67 @@ gdzie macierze $L$ i $DL^T$ są macierzami trójkątnymi.
 Najpierw rozwiązujemy układ $Ly=b$ w poszukiwaniu $y$, a następnie podstawiamy wyliczoną wartość do układu $DL'x=y$ i rozwiązujemy w poszukiwaniu $x$.
 Implementacja funkcji reprezentującej ten algorytm znajduje się w pliku [solveLDLt](solveLDLt.m)
 
+#### Metoda faktoryzacji $LDL^T$
+
+Algorytm faktoryzacji najłatwiej osiągnąć poprzez przedstawienie macierzy $A$ jako iloczyn macierzy $L$ oraz $DL^T$, gdzie $L$ jest macierzą trójkątną dolną z jedynkami na diagonali a $D$ jest macierzą diagonalną.
+
+$$
+\begin{bmatrix}
+    a_{11} & a_{12} & ... & a_{1n} \\
+    a_{21} & a_{22} & ... & a_{2n} \\
+    ... & ... & ... & ... \\
+    a_{n1} & a_{n2} & ... & a_{nn} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+    1 & 0 & ... & 0 \\
+    \overline{l}_{21} & 1 & ... & 0 \\
+    ... & ... & ... & ... \\
+    \overline{l}_{n1} & \overline{l}_{n2} & ... & 1 \\
+\end{bmatrix}
+ \begin{bmatrix}
+    d_{11} & d_{12} \overline{l}_{21} & ... & d_{1n} \overline{l}_{n1} \\
+    0 & d_{22} & ... & d_{2n} \overline{l}_{n2} \\
+    ... & ... & ... & ... \\
+    0 & 0 & ... & d_{nn} \\
+\end{bmatrix}
+$$
+
+Kolejno rozwiązując równania skalarne jesteśmy w stanie przedstawić to działanie w postaci algorytmu.
+
+
+Algorytm:
+
+$$
+d_{ii} = a_{ii} - \sum_{k = 1}^{i-1} {\overline{l}_{ik}^2 d_{kk}}
+$$
+
+$$
+\overline{l}_{ji} = ({a_{ji} -  \sum_{k=1}^{i-1} {\overline{l}_{jk} d_{kk} \overline{l}_{ik}}}) / d_{ii}, i = 1, ..., n, j = i + 1, ..., n
+$$
+
+Implementacja powyższego algorytmu znajduje się w pliku [factorize_LDLt](factorize_LDLt.m).
+
+#### Macierz trójkątna dolna
+Mając podane równanie $Ax = b$ wartości $x$ można wyznaczać iteracyjnie za pomocą kolejnych równań liniowych z jedną niewiadomą za pomocą algorytmu:
+$$
+x_1 = \frac{b_1}{a_{11}}
+$$
+
+$$
+x_k = \frac{b_k - \sum_{j = 1}^{k - 1} {a_{kj} x_j}}{a_{kk}}, k = 2, 3, ..., n
+$$
+
+Implementacja powyższego algorytmu znajduje się w pliku [solveLowerTriangle](solveLowerTriangle.m)
+
+#### Macierz trójkątna górna
+Podobnie jak część dolną, mając podane równanie $Ax = b$ wartości $x$ można wyznaczać iteracyjnie za pomocą kolejnych równań liniowych z jedną niewiadomą za pomocą algorytmu:
+$$
+x_n = \frac{b_n}{a_{nn}}
+$$
+
+$$
+x_k = \frac{b_k - \sum_{j = k + 1}^{n} {a_{kj} x_j}}{a_{kk}}, k = n - 1, n - 2, ..., 1
+$$
+
+Implementacja powyższego algorytmu znajduje się w pliku [solveUpperTriangle](solveUpperTriangle.m)
