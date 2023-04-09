@@ -1,10 +1,21 @@
 # MNUM Miniprojekt 1
 _Richard Staszkiewicz idx. 310918_
 
+<!-- https://snip.mathpix.com/2barti2/notes/f1b9f837-1234-4295-99ed-258c7a7ed446/edit -->
+
 ## Dane
 ### Macierz A
-aij = 2(i + j) + 1, j ̸= i; aii = 4n2 + (2i + 4)n;
-```.m
+
+$$
+\begin{equation} 
+    a_{ij} = \begin{cases}
+        2(i + j) + 1, & \text{dla $j ̸= i$}\\
+        4n2 + (2i + 4)n \text{dla $j = i$}
+    \end{cases}
+\end{equation}
+$$
+
+```matlab
 function [A] = generate_A(n)
     A = zeros(n, n);
 
@@ -32,7 +43,7 @@ Przykładowa macierz A dla n = 5:
 Cechy:Symetryczna, Silna dominacja diagonalna
 
 Dominacja diagonalna została zweryfikowana z pomocą funkcji:
-```.m
+```matlab
 function d = testDiagonalDomminance(A)
     [n, ~] = size(A);
     d = true;
@@ -43,11 +54,17 @@ function d = testDiagonalDomminance(A)
     end
 end
 ```
-która zwróciła 
+która zwróciła dla każdej wartości n wartość True.
 
 ### Macierz b
-bi = 2.5 + 0.6i;
-```.m
+
+$$
+\begin{equation}
+  b_{i} = 2.5 + 0.6i
+\end{equation}
+$$
+
+```matlab
 function [b] = generate_B(n)
     b = zeros(n, 1);
     for i = 1 : n
@@ -67,3 +84,46 @@ Przykładowa macierz b dla n = 5:
 
 ### Wartości n
 n = 5, 10, 25, 50, 100, 200
+
+## Zadanie 1
+### Treść
+Napisać uniwersalną procedurę w Matlabie o odpowiednich parametrach wejścia i wyjścia (solwer),
+rozwiązującą układ n równań liniowych Ax = b, gdzie x, b ∈ Rn, wykorzystując podaną metodę. 
+Nie sprawdzać w procedurze, czy dana macierz A spełnia wymagania stosowalności metody. 
+Zakazane jest użycie jakichkolwiek solwerów w środku. Obliczyć błąd rozwiązania ε = ∥A˜x − b∥2 (skorzystać
+z funkcji norm Matlaba).
+Metoda: faktoryzacji LDLT
+Proszę wykonać wykresy zależności czasu obliczeń i błędu ε od liczby równań n. Skomentować wyniki
+
+### Rozwiązanie
+Z treści wynika że nie należy sprawdzać symetryczności i dodatniego określenia macierzy A.  Wynik zostaje wyznaczony na podstawie rozwiązania układów równań z macierzami trójkątnymi:
+
+$$
+Ax = LDL^T x = L(DL^T x) = b
+$$
+
+$$
+y = DL^T x
+$$
+
+$$
+Ax = Ly = b
+$$
+
+gdzie macierze $L$ i $DL^T$ są macierzami trójkątnymi.
+
+Najpierw rozwiązujemy układ $Ly=b$ w poszukiwaniu $y$, a następnie podstawiamy wyliczoną wartość do układu $DL'x=y$ i rozwiązujemy w poszukiwaniu $x$.
+Program:
+```matlab
+function x = solveLDLt(A, b)
+        % solve using LDL' decomposition
+        % A = LDL'
+        [L, D] = LDLt(A);
+        % First solve equation Ly = b for y
+        % L - lower triangular matrix
+        y = solveLowerTrigMatrix(L, b);
+        % Then solve equation DL' x = y for x
+        % DL' - upper triangular matrix
+        x = solveUpperTrigMatrix(D * L', y);
+end
+```

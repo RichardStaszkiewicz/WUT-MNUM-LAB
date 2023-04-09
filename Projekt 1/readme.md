@@ -5,6 +5,7 @@ _Richard Staszkiewicz idx. 310918_
 
 ## Dane
 ### Macierz A
+
 $$
 \begin{equation} 
     a_{ij} = \begin{cases}
@@ -13,11 +14,8 @@ $$
     \end{cases}
 \end{equation}
 $$
-\begin{equation}
-  b_{i} = 2.5 + 0.6i
-\end{equation}
-$$
 
+Implementacja generacji znajduje się w pliku [Generate_A](generate_A.m)
 ```matlab
 function [A] = generate_A(n)
     A = zeros(n, n);
@@ -57,10 +55,16 @@ function d = testDiagonalDomminance(A)
     end
 end
 ```
-która zwróciła 
+która zwróciła dla każdej wartości n wartość True.
 
 ### Macierz b
-bi = 2.5 + 0.6i;
+
+$$
+\begin{equation}
+  b_{i} = 2.5 + 0.6i
+\end{equation}
+$$
+
 ```matlab
 function [b] = generate_B(n)
     b = zeros(n, 1);
@@ -110,3 +114,17 @@ $$
 gdzie macierze $L$ i $DL^T$ są macierzami trójkątnymi.
 
 Najpierw rozwiązujemy układ $Ly=b$ w poszukiwaniu $y$, a następnie podstawiamy wyliczoną wartość do układu $DL'x=y$ i rozwiązujemy w poszukiwaniu $x$.
+Program dostępny w pliku solveLDLt
+```matlab
+function x = solveLDLt(A, b)
+        % solve using LDL' decomposition
+        % A = LDL'
+        [L, D] = LDLt(A);
+        % First solve equation Ly = b for y
+        % L - lower triangular matrix
+        y = solveLowerTrigMatrix(L, b);
+        % Then solve equation DL' x = y for x
+        % DL' - upper triangular matrix
+        x = solveUpperTrigMatrix(D * L', y);
+end
+```
