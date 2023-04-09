@@ -16,21 +16,6 @@ $$
 $$
 
 Implementacja generacji znajduje się w pliku [Generate_A](generate_A.m)
-```matlab
-function [A] = generate_A(n)
-    A = zeros(n, n);
-
-    for i = 1 : n
-        for j = 1 : n
-            A(i, j) = 2 * (i + j) + 1;
-        end
-    end
-    
-    for i = 1 : n
-        A(i, i) = 4 * n * n + (2 * i + 4) * n;
-    end
-end
-```
 
 Przykładowa macierz A dla n = 5:
 ```
@@ -43,19 +28,7 @@ Przykładowa macierz A dla n = 5:
 
 Cechy:Symetryczna, Silna dominacja diagonalna
 
-Dominacja diagonalna została zweryfikowana z pomocą funkcji:
-```matlab
-function d = testDiagonalDomminance(A)
-    [n, ~] = size(A);
-    d = true;
-    for i = 1 : n
-        if (sum(abs(A(i, :))) - abs(A(i, i))) > abs(A(i, i))
-            d = false;
-        end
-    end
-end
-```
-która zwróciła dla każdej wartości n wartość True.
+Dominacja diagonalna została zweryfikowana z pomocą funkcji zaimplementowanej w pliku [testDiagonalDomminance](testDiagonalDomminance.m), która zwróciła dla każdej wartości n wartość True.
 
 ### Macierz b
 
@@ -65,14 +38,7 @@ $$
 \end{equation}
 $$
 
-```matlab
-function [b] = generate_B(n)
-    b = zeros(n, 1);
-    for i = 1 : n
-        b(i, 1) = 2.5 + 0.6 * i;
-    end
-end
-```
+Implementacja generacji znajduje się w pliku [Generate_B](generate_B.m)
 
 Przykładowa macierz b dla n = 5:
 ```
@@ -114,17 +80,5 @@ $$
 gdzie macierze $L$ i $DL^T$ są macierzami trójkątnymi.
 
 Najpierw rozwiązujemy układ $Ly=b$ w poszukiwaniu $y$, a następnie podstawiamy wyliczoną wartość do układu $DL'x=y$ i rozwiązujemy w poszukiwaniu $x$.
-Program dostępny w pliku solveLDLt
-```matlab
-function x = solveLDLt(A, b)
-        % solve using LDL' decomposition
-        % A = LDL'
-        [L, D] = LDLt(A);
-        % First solve equation Ly = b for y
-        % L - lower triangular matrix
-        y = solveLowerTrigMatrix(L, b);
-        % Then solve equation DL' x = y for x
-        % DL' - upper triangular matrix
-        x = solveUpperTrigMatrix(D * L', y);
-end
-```
+Implementacja funkcji reprezentującej ten algorytm znajduje się w pliku [solveLDLt](solveLDLt.m)
+
