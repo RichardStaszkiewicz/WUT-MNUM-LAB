@@ -264,12 +264,16 @@ $S_p$ = {3, 5, 7, 9, 10}
 #### Metoda Najmniejszych Kwadratów
 Metoda Najmniejszych Kwadratów jest statystyczną procedurą znajdowania linii najlepszego dopasowania. Minimalizuje ona błąd średniokwadratowy między znalezionym rozwiązaniem a zadanymi w próbie wartościami przy podanym stopniu rozwiązania D.
 
-$\forall x \in \mathbb{R}  || b - A \hat{x} \leqslant b - A x ||$
+$$
+\forall x \in \mathbb{R}  || b - A \hat{x} \leqslant b - A x ||
+$$
 
 #### Układ równań normalnych
 Metoda układu równań normalnych wymaga rozwiązania układu równań $A^t A \hat{x} = A^t b$ gdzie macierz $A$ jest macierzą współczynników wyznaczaną na podstawie zadanych wartości X:
 
-$A_{ij} = {x_i}^j$
+$$
+A_{ij} = {x_i}^j
+$$
 
 Wektor $b$ jest równy wektorowi $y^T$.
 Implementacja znajdowania macierzy współczynników znajduje się w pliku [generate_A3](generate_A3.m).
@@ -279,6 +283,26 @@ Implementacja aproksymacji układami równań normalnych znajduje się w pliku [
 Metoda aproksymacji z użyciem rozkładu SVD macierzy A polega na rozwiązaniu układu:
 
 $$
-\hat{x} = A^{+} 
+\hat{x} = A^{+} b
+A^{+} = V \sigma^{+} U^T
 $$
 
+Gdzie $V$ , $\sigma$ i $U$ pochodzą z rozkładu SVD macierzy A i służą do obliczenia jej pseudoinwersji.
+Implementacja aproksymacji z wykorzystaniem rozkładu SVD znajduje się w pliku [approximateSVD](approximateSVD.m).
+
+#### Wizualizacja
+Za pomocą funkcji wbudowanych matlaba do wizualizacji danych zareprezentowano każde z rozwiązań. Rezultaty ukazują poniższe wykresy:
+
+##### Równania normalne + rozkład $LDL^T$
+![](Z3EpsilonLDLt.png)
+
+##### Równania normalne + metoda Gaussa-Seidla
+![](Z3EpsilonGS.png)
+
+##### Rozkład SVD
+![](Z3EpsilonSVD.png)
+
+Implementacja skryptu generującego wykresy dostępna jest w pliku [plotZ3](plotZ3.m).
+
+#### Wnioski
+1. 
