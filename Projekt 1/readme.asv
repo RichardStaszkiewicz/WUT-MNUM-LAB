@@ -1,0 +1,69 @@
+# MNUM Miniprojekt 1
+_Richard Staszkiewicz idx. 310918_
+
+## Dane
+### Macierz A
+aij = 2(i + j) + 1, j ̸= i; aii = 4n2 + (2i + 4)n;
+```.m
+function [A] = generate_A(n)
+    A = zeros(n, n);
+
+    for i = 1 : n
+        for j = 1 : n
+            A(i, j) = 2 * (i + j) + 1;
+        end
+    end
+    
+    for i = 1 : n
+        A(i, i) = 4 * n * n + (2 * i + 4) * n;
+    end
+end
+```
+
+Przykładowa macierz A dla n = 5:
+```
+   130     7     9    11    13
+     7   140    11    13    15
+     9    11   150    15    17
+    11    13    15   160    19
+    13    15    17    19   170
+```
+
+Cechy:Symetryczna, Silna dominacja diagonalna
+
+Dominacja diagonalna została zweryfikowana z pomocą funkcji:
+```.m
+function d = testDiagonalDomminance(A)
+    [n, ~] = size(A);
+    d = true;
+    for i = 1 : n
+        if (sum(abs(A(i, :))) - abs(A(i, i))) > abs(A(i, i))
+            d = false;
+        end
+    end
+end
+```
+która zwróciła 
+
+### Macierz b
+bi = 2.5 + 0.6i;
+```.m
+function [b] = generate_B(n)
+    b = zeros(n, 1);
+    for i = 1 : n
+        b(i, 1) = 2.5 + 0.6 * i;
+    end
+end
+```
+
+Przykładowa macierz b dla n = 5:
+```
+    3.1000
+    3.7000
+    4.3000
+    4.9000
+    5.5000
+```
+
+### Wartości n
+n = 5, 10, 25, 50, 100, 200
