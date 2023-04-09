@@ -288,5 +288,23 @@ A^{+} = V \sigma^{+} U^T
 $$
 
 Gdzie $V$ , $\sigma$ i $U$ pochodzą z rozkładu SVD macierzy A i służą do obliczenia jej pseudoinwersji.
-Implementacja 
+Implementacja aproksymacji z wykorzystaniem rozkładu SVD znajduje się w pliku [approximateSVD](approximateSVD.m).
 
+#### Wizualizacja
+Za pomocą funkcji wbudowanych matlaba do wizualizacji danych zareprezentowano każde z rozwiązań. Rezultaty ukazują poniższe wykresy:
+
+##### Równania normalne + rozkład $LDL^T$
+![](Z3EpsilonLDLt.png)
+
+##### Równania normalne + metoda Gaussa-Seidla
+![](Z3EpsilonGS.png)
+
+##### Rozkład SVD
+![](Z3EpsilonSVD.png)
+
+Implementacja skryptu generującego wykresy dostępna jest w pliku [plotZ3](plotZ3.m).
+
+#### Wnioski
+1. Najlepiej aproksymuje podany zbiór metoda utylizująca równania normalne i rozkład $LDL^T$
+2. Niewiele gorzej od wspomnianej w pkt. 1 metody radzi sobie rozkład SVD - różnica dotyczy tylko jednego stopnia, jednak jest rzędu wielkości $10^3$.
+3. O ile dla małych stopni metoda używająca GS sobie radzi, o tyle dla wyższych stopni wielomianów zaczyna rozbiegać. Dzieje się tak, ponieważ macierz $A$ po przekroczeniu 5 stopnia przestaje być przekątniowo dominująca

@@ -305,4 +305,7 @@ Za pomocą funkcji wbudowanych matlaba do wizualizacji danych zareprezentowano k
 Implementacja skryptu generującego wykresy dostępna jest w pliku [plotZ3](plotZ3.m).
 
 #### Wnioski
-1. 
+1. Najlepiej aproksymuje podany zbiór metoda utylizująca równania normalne i rozkład $LDL^T$
+2. Niewiele gorzej od wspomnianej w pkt. 1 metody radzi sobie rozkład SVD - różnica dotyczy tylko jednego stopnia, jednak jest rzędu wielkości $10^3$.
+3. O ile dla małych stopni metoda używająca GS sobie radzi, o tyle dla wyższych stopni wielomianów zaczyna rozbiegać. Dzieje się tak, ponieważ macierz $A$ po przekroczeniu 5 stopnia przestaje być przekątniowo dominująca nie speniając w związku z tym wymogów metody.
+4. Zawsze wartym wspomnienia jest tendencja do malenia błędu wraz ze wzrostem stopnia aproksymującego wielomianu. Przytoczyć tu można twierdzenie, że w wypadku liczby próbek mniejszej bądź równej stopniowi wielomianu aproksymującego, problem sprowadza się do interpolacji wielomianowej.
