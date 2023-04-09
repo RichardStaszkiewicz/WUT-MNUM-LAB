@@ -7,11 +7,11 @@ _Richard Staszkiewicz idx. 310918_
 ### Macierz A
 
 $$
-\begin{equation} 
-    a_{ij} = \begin{cases}
-        2(i + j) + 1, & \text{dla $j ̸= i$}\\
-        4n2 + (2i + 4)n \text{dla $j = i$}
-    \end{cases}
+\begin{equation}
+  a_{ij} = \begin{cases}
+    2 (i + j) + 1, & \text{dla $j \neq i $}\\
+    4n^2 + (2i + 4) n, & \text{dla $j = i$}\\
+  \end{cases}
 \end{equation}
 $$
 
@@ -125,6 +125,7 @@ Implementacja powyższego algorytmu znajduje się w pliku [factorize_LDLt](facto
 
 #### Macierz trójkątna dolna
 Mając podane równanie $Ax = b$ wartości $x$ można wyznaczać iteracyjnie za pomocą kolejnych równań liniowych z jedną niewiadomą za pomocą algorytmu:
+
 $$
 x_1 = \frac{b_1}{a_{11}}
 $$
@@ -137,6 +138,7 @@ Implementacja powyższego algorytmu znajduje się w pliku [solveLowerTriangle](s
 
 #### Macierz trójkątna górna
 Podobnie jak część dolną, mając podane równanie $Ax = b$ wartości $x$ można wyznaczać iteracyjnie za pomocą kolejnych równań liniowych z jedną niewiadomą za pomocą algorytmu:
+
 $$
 x_n = \frac{b_n}{a_{nn}}
 $$
@@ -146,3 +148,9 @@ x_k = \frac{b_k - \sum_{j = k + 1}^{n} {a_{kj} x_j}}{a_{kk}}, k = n - 1, n - 2, 
 $$
 
 Implementacja powyższego algorytmu znajduje się w pliku [solveUpperTriangle](solveUpperTriangle.m)
+
+### Obliczanie błędu i reprezentacja graficzna
+Wykorzystując wzór na błąd Epsilon od liczby równań n w postaci $\varepsilon = ∥A\tilde{x} − b∥_2$ i funkcji wbudowanych Matlaba do wizualizacji otrzymano następujące przebiegi:
+
+
+Implementacja powyższej wizualizacji znajduje się w pliku [plotZ1Epsilon](plotZ1Epsilon.m)

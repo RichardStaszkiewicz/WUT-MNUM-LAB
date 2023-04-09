@@ -1,7 +1,7 @@
 function x = solveLDLt(A, b)
         % solve using LDL' decomposition
         % A = LDL'
-        [L, D] = LDLt(A);
+        [L, D] = factorize_LDLt(A);
         % First solve equation Ly = b for y
         % L - lower triangular matrix
         y = solveLowerTriangle(L, b);
