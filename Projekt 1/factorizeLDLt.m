@@ -1,4 +1,4 @@
-function [L, D] = factorize_LDLt(A)
+function [L, D] = factorizeLDLt(A)
     [n, ~] = size(A);
     L = zeros(n, n);
     D = zeros(n, n);

@@ -1,11 +1,8 @@
 function x = solveLDLt(A, b)
-        % solve using LDL' decomposition
         % A = LDL'
-        [L, D] = factorize_LDLt(A);
-        % First solve equation Ly = b for y
-        % L - lower triangular matrix
+        [L, D] = factorizeLDLt(A);
+        % solve equation Ly = b for y
         y = solveLowerTriangle(L, b);
-        % Then solve equation DL' x = y for x
-        % DL' - upper triangular matrix
+        % solve equation DL' x = y for x
         x = solveUpperTriangle(D * L', y);
 end

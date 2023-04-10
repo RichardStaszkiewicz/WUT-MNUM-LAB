@@ -121,7 +121,7 @@ $$
 \overline{l}_{ji} = ({a_{ji} -  \sum_{k=1}^{i-1} {\overline{l}_{jk} d_{kk} \overline{l}_{ik}}}) / d_{ii}, i = 1, ..., n, j = i + 1, ..., n
 $$
 
-Implementacja powyższego algorytmu znajduje się w pliku [factorize_LDLt](factorize_LDLt.m).
+Implementacja powyższego algorytmu znajduje się w pliku [factorizeLDLt](factorizeLDLt.m).
 
 #### Macierz trójkątna dolna
 Mając podane równanie $Ax = b$ wartości $x$ można wyznaczać iteracyjnie za pomocą kolejnych równań liniowych z jedną niewiadomą za pomocą algorytmu:
@@ -305,7 +305,353 @@ Za pomocą funkcji wbudowanych matlaba do wizualizacji danych zareprezentowano k
 Implementacja skryptu generującego wykresy dostępna jest w pliku [plotZ3](plotZ3.m).
 
 #### Wnioski
-1. Najlepiej aproksymuje podany zbiór metoda utylizująca równania normalne i rozkład $LDL^T$
+1. Najlepiej aproksymuje podany zbiór metoda utylizującą równania normalne i rozkład $LDL^T$
 2. Niewiele gorzej od wspomnianej w pkt. 1 metody radzi sobie rozkład SVD - różnica dotyczy tylko jednego stopnia, jednak jest rzędu wielkości $10^3$.
 3. O ile dla małych stopni metoda używająca GS sobie radzi, o tyle dla wyższych stopni wielomianów zaczyna rozbiegać. Dzieje się tak, ponieważ macierz $A$ po przekroczeniu 5 stopnia przestaje być przekątniowo dominująca nie speniając w związku z tym wymogów metody.
 4. Zawsze wartym wspomnienia jest tendencja do malenia błędu wraz ze wzrostem stopnia aproksymującego wielomianu. Przytoczyć tu można twierdzenie, że w wypadku liczby próbek mniejszej bądź równej stopniowi wielomianu aproksymującego, problem sprowadza się do interpolacji wielomianowej.
+
+## Skrypty
+
+### generate_A1.m
+```matlab
+function [A] = generate_A1(n)
+    A = zeros(n, n);
+
+    for i = 1 : n
+        for j = 1 : n
+            A(i, j) = 2 * (i + j) + 1;
+        end
+    end
+    
+    for i = 1 : n
+        A(i, i) = 4 * n * n + (2 * i + 4) * n;
+    end
+end
+```
+
+### testDiagonalDomminance.m
+```matlab
+function d = testDiagonalDomminance(A)
+    [n, ~] = size(A);
+    d = true;
+    for i = 1 : n
+        if (sum(abs(A(i, :))) - abs(A(i, i))) > abs(A(i, i))
+            d = false;
+        end
+    end
+end
+% Sprawdza dominację diagonalną
+% A - macierz symetryczna
+% d - czy macierz A ma dominację diagonalną?
+```
+
+### generate_B1.m
+```matlab
+function [b] = generate_B1(n)
+    b = zeros(n, 1);
+    for i = 1 : n
+        b(i, 1) = 2.5 + 0.6 * i;
+    end
+end
+```
+
+### solveLDLt.m
+```matlab
+function x = solveLDLt(A, b)
+        % A = LDL'
+        [L, D] = factorizeLDLt(A);
+        % solve equation Ly = b for y
+        y = solveLowerTriangle(L, b);
+        % solve equation DL' x = y for x
+        x = solveUpperTriangle(D * L', y);
+end
+```
+
+### factorizeLDLt.m
+```matlab
+function [L, D] = factorizeLDLt(A)
+    [n, ~] = size(A);
+    L = zeros(n, n);
+    D = zeros(n, n);
+    
+    for i = 1 : n
+        L(i, i) = 1;
+        D(i, i) = A(i, i);
+
+        for k = 1 : i - 1
+            D(i, i) = D(i, i) - L(i, k) ^ 2 * D(k, k);
+        end
+        
+        for j = i + 1 : n
+            L(j, i) = A(j, i);
+            for k = 1 : i - 1
+                L(j, i) = L(j, i) - L(j, k) * D(k, k) * L(i, k);
+            end
+            L(j, i) = L(j, i) / D(i, i);
+        end
+    end
+end
+```
+
+### solveLowerTriangle.m
+```matlab
+function x = solveLowerTriangle(A, b)
+    % solve linear equation with lower triangular matrix
+    [n, ~] = size(A);
+    x = zeros(n, 1);
+
+    for k = 1 : n
+        x(k, 1) = b(k, 1);
+        
+        for j = 1 : k - 1
+            x(k, 1) = x(k, 1) - A(k, j) * x(j, 1);
+        end
+
+        x(k, 1) = x(k, 1) / A(k, k);
+    end
+end
+```
+
+### solveUpperTriangle.m
+```matlab
+function x = solveUpperTriangle(A, b)
+    % solve linear equation with upper triangular matrix
+    [n, ~] = size(A);
+    x = zeros(n, 1);
+    
+    for k = n : -1 : 1
+        x(k, 1) = b(k, 1);
+        
+        for j = k + 1 : n
+            x(k, 1) = x(k, 1) - A(k, j) * x(j, 1);
+        end
+
+        x(k, 1) = x(k, 1) / A(k, k);
+    end
+end
+```
+
+### plotZEpsilon.m
+```matlab
+function plotZEpsilon(generate_A, generate_B, iter)
+    N = [5 10 25 50 100 200];
+    [EA, TA] = analyzeAlgorithm(generate_A, generate_B, iter, N);
+    
+    tiledlayout(2, 1);
+    
+    nexttile
+    plot(N, EA);
+    title('Błąd Epsilon od liczby równań n');
+    xlabel('n');
+    ylabel('epsilon');
+
+    nexttile
+    plot(N, TA);
+    title('Czas wykonania od liczby równań n');
+    xlabel('n');
+    ylabel('czas');
+end
+
+function [EA, TA] = analyzeAlgorithm(generate_A, generate_B, iter, N)
+    EA = zeros(size(N));
+    TA = zeros(size(N));
+
+    for k = 1 : iter
+        epsilonsA = zeros(size(N));
+        timesA = zeros(size(N));
+    
+        i = 1;
+        for n = N
+            A = generate_A(n);
+            b = generate_B(n);
+            [epsilonsA(i), timesA(i)] = solveAndGetEpsilon(A, b);
+            i = i + 1;
+        end
+        EA = EA + epsilonsA;
+        TA = TA + timesA;
+    end
+
+    EA = EA / iter;
+    TA = TA / iter;
+end
+
+function [epsilon, time] = solveAndGetEpsilon(A, b)
+    tic
+    x = solveLDLt(A, b);
+    time = toc;
+    epsilon = norm(A * x - b, 2);
+end
+```
+
+### generate_A2.m
+```matlab
+function [A] = generate_A2(n)
+    A = zeros(n, n);
+
+    for i = 1 : n
+        A(i, i) = -12;
+    end
+    
+    for i = 2 : n
+        A(i, i - 1) = 4.5;
+        A(i - 1, i) = 4.5;
+    end
+
+    for i = 3 : n
+        A(i, i - 2) = 4.5;
+        A(i - 2, i) = 4.5;
+    end
+end
+```
+
+### generate_B2.m
+```matlab
+function [b] = generate_B2(n)
+    b = zeros(n, 1);
+    for i = 1 : n
+        b(i, 1) = -3.5 + 0.5 * i;
+    end
+end
+```
+
+### plotConcatenate.m
+```matlab
+function [EA_GS1, EA_GS2] = plotConcatenate(iter)
+    N = [5 10 25 50 100 200];
+    [EA1, TA1] = analyzeAlgorithm(@generate_A1, @generate_B1, iter, @solveAndGetEpsilonLDLt, N);
+    [EA2, TA2] = analyzeAlgorithm(@generate_A2, @generate_B2, iter, @solveAndGetEpsilonLDLt, N);
+    [EA_GS1, TA_GS1] = analyzeAlgorithm(@generate_A1, @generate_B1, iter, @solveAndGetEpsilonGS, N);
+    [EA_GS2, TA_GS2] = analyzeAlgorithm(@generate_A2, @generate_B2, iter, @solveAndGetEpsilonGS, N);
+    tiledlayout(2, 1);
+    
+    nexttile
+    plot(N, EA1, N, EA2, N, EA_GS1, N, EA_GS2);
+    legend('LDLt: Zad 1', 'LDLt: Zad 2', 'GS: Zad 1', 'GS: Zad 2');
+    title('Błąd Epsilon od liczby równań n');
+    xlabel('n');
+    ylabel('epsilon');
+    set(gca, 'YScale', 'log')
+
+    nexttile
+    plot(N, TA1, N, TA2, N, TA_GS1, N, TA_GS2);
+    legend('LDLt: Zad 1', 'LDLt: Zad 2', 'GS: Zad 1', 'GS: Zad 2');
+    title('Czas wykonania od liczby równań n');
+    xlabel('n');
+    ylabel('czas');
+    set(gca, 'YScale', 'log')
+end
+
+function [EA, TA] = analyzeAlgorithm(generate_A, generate_B, iter, solveAndGetEpsilon, N)
+    EA = zeros(size(N));
+    TA = zeros(size(N));
+
+    for k = 1 : iter
+        epsilonsA = zeros(size(N));
+        timesA = zeros(size(N));
+    
+        i = 1;
+        for n = N
+            A = generate_A(n);
+            b = generate_B(n);
+            [epsilonsA(i), timesA(i)] = solveAndGetEpsilon(A, b, n);
+            i = i + 1;
+        end
+        EA = EA + epsilonsA;
+        TA = TA + timesA;
+    end
+
+    EA = EA / iter;
+    TA = TA / iter;
+end
+
+function [epsilon, time] = solveAndGetEpsilonLDLt(A, b, ~)
+    tic
+    x = solveLDLt(A, b);
+    time = toc;
+    epsilon = norm(A * x - b, 2);
+end
+
+function [epsilon, time] = solveAndGetEpsilonGS(A, b, n)
+    tic
+    x = GS(A, b, 1e-8, n * 1000);
+    time = toc;
+    epsilon = norm(A * x - b, 2);
+end
+```
+
+### generate_A3.m
+```matlab
+function [A] = generate_A3(X, Y, degree)
+    N = size(Y, 1);
+    A = zeros(N, degree + 1);
+    for i = 1 : N
+        for j = 1 : degree + 1
+            A(i, j) = X(i) ^ (j - 1);
+        end
+    end
+end
+```
+
+### approximateNormal.m
+```matlab
+function [x] = approximateNormal(X, Y, degree, useGS)
+    A = generate_A3(X, Y, degree);
+    
+    if useGS
+        x = GS(A' * A, A' * Y, 1e-8, 1000 * degree);
+    else
+        x = solveLDLt(A' * A, A' * Y);
+    end
+end
+```
+
+### approximateSVD.m
+```matlab
+function [x] = approximateSVD(X, Y, degree)
+    A = generate_A3(X, Y, degree);
+
+    [U, S, V] = svd(A);
+
+    sigma = S(1 : size(A, 2), :);
+    sigma_plus = [ inv(sigma) zeros(size(A, 2), size(A, 1) - size(A, 2))];
+    A_plus = V * sigma_plus * U';
+    x = A_plus * Y;
+end
+```
+
+### plotZ3.m
+```matlab
+function [result] = plotZ3(strategy)
+
+    N = [3, 5, 7, 9, 10];
+    
+    for i = 1 : length(N)
+        degree = N(i);
+        nexttile
+        
+        X = -10:2:10;
+        Y = [-35.798, -19.430, -9.737, -3.163, -0.650, 1.587, 1.517, 2.183, 5.102, 11.091, 22.000]';
+        resolution = -10:0.2:10;
+        
+        if strategy == 0
+            result = approximateNormal(X, Y, degree, 0);
+        elseif strategy == 1
+            result = approximateNormal(X, Y, degree, 1);
+        else
+            result = approximateSVD(X, Y, degree);
+        end
+    
+        result = result(end:-1:1);
+    
+        polynomial_values = polyval(result, X);
+        epsilon_2 = norm(polynomial_values - Y');
+        epsilon_inf = norm(polynomial_values - Y', "inf");
+    
+        plot(resolution , polyval(result, resolution), X, Y, 'o');
+    
+        title({['Degree = ' num2str(degree)] ...
+            ['epsilon 2 = ' num2str(epsilon_2)] ...
+            ['epsilon inf = ' num2str(epsilon_inf)]});
+    end
+end
+```
