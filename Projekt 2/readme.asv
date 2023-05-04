@@ -25,6 +25,5 @@ $$
 c = {af(b) - bf(a)} / {f(b) - f(a)}
 $$
 
-W następnym kroku rozpatrujemy ten przedział ze zbioru ${[a, c], [c, b]}$ który ma ujemny iloczyn (granice przedziału o różnych znakach).
-Kryterium stopu jest $f(c) < /delta$.
+W następnym kroku rozpatrujemy ten przedział ze zbioru 
 
