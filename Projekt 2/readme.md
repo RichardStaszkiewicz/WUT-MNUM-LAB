@@ -24,7 +24,7 @@ c = \frac{af(b) - bf(a)}{f(b) - f(a)}
 $$
 
 W następnym kroku rozpatrujemy ten przedział ze zbioru ${[a, c], [c, b]}$ który ma ujemny iloczyn (granice przedziału o różnych znakach).
-Kryterium stopu jest $f(c) < \delta$ gdzie $\delta$ jest dokładnością.
+Kryterium stopu jest $f(c) < \delta $ gdzie $\delta$ jest dokładnością. Implementacja powyższego algorytmu jest reprezentowana solverem (solverFalsi)[solverFalsi.m].
 
 Sprawdzono zadaną funkcję i dla krańców przedziału $[2, 11]$ otrzymano odpowiednio wartości $[-4.6036, -5.0228]$.
 Przedział sam w sobie nie spełnia więc założeń użycia reguły falsi. Z pomocą analizy graficznej narzędziem wolfram alpha stwierdzono także występowanie w tym przedziale 2 miejsc zerowych.
@@ -48,9 +48,17 @@ $$
 x_{i+1} = x_n - \frac{f(x_i)}{f'(x_i)}
 $$
 
+Implementacja została udostępniona przez Prowadzącego i znajduje się w pliku (newton)[newton.m].
 
 ### Przedziały izolacji pierwiastków
 Znajdowanie przedziałów izolacji pierwiastków funkcji jest stosunkowo proste i działa na zasadzie zmodyfikowanego algorytmu gąsienicy. Mając zatany krok $\beta$ i granice badanego przedziału $[a, b]$
-iteracyjnie wyznaczamy najmniejszy przedział taki że jego krańce są przeciwnych znaków a pochodna nie jest na krańcach równa 0. Algorytm izolacji pierwiastków zaimplementowano w pliku [isolation](isolation.m).
+iteracyjnie wyznaczamy najmniejszy przedział taki że jego krańce są przeciwnych znaków a pochodna nie jest na krańcach równa 0. 
+
+Algorytm izolacji pierwiastków zaimplementowano w pliku [isolation](isolation.m).
+
+### Rozwiązanie
+Rezultaty uzyskane przez poszczególne solvery reprezentuje tabela i grafika uzyskana na podstawie procedury (plot_Z1)[plot_Z1.m].
+
+!()[Z1.png]
 
 
