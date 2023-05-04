@@ -22,9 +22,15 @@ można zastosować regułę falsi do znalezienia miejsca zerowego. Iteracyjnie w
 punkty $(a, f(a))$ oraz $(b, f(b))$ z osią OX za pomocą wzoru
 
 $$
-c = {af(b) - bf(a)} / {f(b) - f(a)}
+c = \frac{af(b) - bf(a)}{f(b) - f(a)}
 $$
 
 W następnym kroku rozpatrujemy ten przedział ze zbioru ${[a, c], [c, b]}$ który ma ujemny iloczyn (granice przedziału o różnych znakach).
-Kryterium stopu jest $f(c) < /delta$.
+Kryterium stopu jest $f(c) < \delta$ gdzie $\delta$ jest dokładnością.
+
+Sprawdzono zadaną funkcję i dla krańców przedziału $[2, 11]$ otrzymano odpowiednio wartości $[-4.6036, -5.0228]$.
+Przedział nie spełnia więc założeń użycia reguły falsi. Z pomocą analizy graficznej narzędziem wolfram alpha stwierdzono także występowanie w tym przedziale 2 miejsc zerowych.
+W celu analizy algorytmu, dokonano rozbicia przedziału z pomocą wyznaczania przedziałów izolacji pierwiastków zaimplementowanego w pliku [isolation](isolation.m).
+
+Dla każdego elementu zmodyfikowanego zbioru uruchomiono solver [solverFalsi](solverFalsi.m) i otrzymano następujące miejsca zerowe: []
 
