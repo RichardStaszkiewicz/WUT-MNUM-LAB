@@ -104,3 +104,20 @@ Implementacja podstawowego algorytmu MM2 do znajdywania pojedyńczego pierwiastk
 
 ### Deflacja czynnikiem liniowym
 Jej realizacją jest prosty algorytm implementujący schemat Hornera na podstawie wzoru $q_i = a_i + q_{i + i} * \alpha. Jest on zaimplementowany jako elemnet funkcji [findPolyZeros](findPolyZeros.m).
+
+### Rozwiązanie
+Funkcja [findPolyZeros](findPolyZeros.m) iteracyjnnie znajduje kolejne miejsca zerowe. Algorytm jest prosty:
+1. Znajdź miejsce zerowe $x_0$ wielomianu X za pomocą metody MM2
+2. Podziel z pomocą schematu Hornera wielomian przez wyrażenie $(x - x_0)$
+
+W rezultacie uruchomienia instrukcji w postaci _findPolyZeros(X, 1e-9, 100)_, tj. z warunkami stopu na błędzie bezwzględnym _x0_ rzędu $10^{-9}$ bądź $$ilość iteracji \ge 100$$, otrzymano następujące rezultaty:
+| *x0* | *iter* |
+| :---: | :---: |
+| 0.1276 + 0.7090i | 17 |
+| 0.1276 - 0.7090i | 10 |
+| 1.4660 | 12 |
+| -1.9713 | 1 |
+
+W celu zwizualizowania rozwiązania zaimplementowano prosty wyświetlacz znalezionych miejsc zerowych w pliku [plot_Z2](plot_Z2.m), w rezultacie uruchomienia któego otrzymano następujący wykres:
+
+![](Z2.png)
