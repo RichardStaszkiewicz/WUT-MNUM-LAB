@@ -24,7 +24,7 @@ c = \frac{af(b) - bf(a)}{f(b) - f(a)}
 $$
 
 W następnym kroku rozpatrujemy ten przedział ze zbioru ${[a, c], [c, b]}$ który ma ujemny iloczyn (granice przedziału o różnych znakach).
-Kryterium stopu jest $f(c) < \delta$ gdzie $\delta$ jest dokładnością. Implementacja powyższego algorytmu jest reprezentowana solverem [solverFalsi](solverFalsi.m).
+Kryterium stopu jest $$f(c) < \delta$$ gdzie $\delta$ jest dokładnością. Implementacja powyższego algorytmu jest reprezentowana solverem [solverFalsi](solverFalsi.m).
 
 Sprawdzono zadaną funkcję i dla krańców przedziału $[2, 11]$ otrzymano odpowiednio wartości $[-4.6036, -5.0228]$.
 Przedział sam w sobie nie spełnia więc założeń użycia reguły falsi. Z pomocą analizy graficznej narzędziem wolfram alpha stwierdzono także występowanie w tym przedziale 2 miejsc zerowych.
@@ -95,7 +95,9 @@ $$
 Na podstawie wartości wielomianu w zadanym punkcie startowym $x_k$ oraz informacji o jego pierwszej i drugiej pochodnej, MM2 iteracyjnie poprawia położenie do czasu osiągnięcia pierwiasta wielomianu z zadaną dokładnością zgodnie ze wzorem
 $$
 z_{+,-} = \frac{-2f(x_k)}{f'(x_k)\pm\sqrt{(f'(x_k))^2 - 2f(x_k)f''(x_k)}}
-z_{min} = min{z_+, z_-}
+
+z_{min} = min(z_+, z_-)
+
 x_{k + 1} = x_k + z_{min}
 $$
 
@@ -103,14 +105,14 @@ Ponieważ pierwiastki wielomianu mogą być wielokrotne i zespolone, należy w m
 Implementacja podstawowego algorytmu MM2 do znajdywania pojedyńczego pierwiastka została zrealizowana w pliku [solverMM2](solverMM2.m).
 
 ### Deflacja czynnikiem liniowym
-Jej realizacją jest prosty algorytm implementujący schemat Hornera na podstawie wzoru $q_i = a_i + q_{i + i} * \alpha . Jest on zaimplementowany jako elemnet funkcji [findPolyZeros](findPolyZeros.m).
+Jej realizacją jest prosty algorytm implementujący schemat Hornera na podstawie wzoru $q_i = a_i + q_{i + i} * \alpha$ . Jest on zaimplementowany jako elemnet funkcji [findPolyZeros](findPolyZeros.m).
 
 ### Rozwiązanie
 Funkcja [findPolyZeros](findPolyZeros.m) iteracyjnnie znajduje kolejne miejsca zerowe. Algorytm jest prosty:
 1. Znajdź miejsce zerowe $x_0$ wielomianu X za pomocą metody MM2
 2. Podziel z pomocą schematu Hornera wielomian przez wyrażenie $(x - x_0)$
 
-W rezultacie uruchomienia instrukcji w postaci _findPolyZeros(X, 1e-9, 100)_, tj. z warunkami stopu na błędzie bezwzględnym _x0_ rzędu $10^{-9}$ bądź $$ilość_iteracji \ge 100$$, otrzymano następujące rezultaty:
+W rezultacie uruchomienia instrukcji w postaci _findPolyZeros(X, 1e-9, 100)_, tj. z warunkami stopu na błędzie bezwzględnym _x0_ rzędu $10^{-9}$ bądź $iteracje \ge 100$, otrzymano następujące rezultaty:
 | *x0* | *iter* |
 | :---: | :---: |
 | 0.1276 + 0.7090i | 17 |
