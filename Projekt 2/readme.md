@@ -88,5 +88,19 @@ Metoda Newtona może zawieść (nie znaleźć najbliższego pierwiastka w otocze
 ### Treść
 Używając metody *Mullera MM2* proszę znaleźć wszystkie pierwiastki wielomianu czwartego stopnia:
 $$
-f(x) = a_{4}x^4 + a_{3}x^3 + a_{2}x^2 + a_{1}x + a_0, [a_4 a_3 a_2 a_1 a_0] = [2 \frac{1}{2} -5 2 -3]
+f(x) = a_{4}x^4 + a_{3}x^3 + a_{2}x^2 + a_{1}x + a_0, [a_4, a_3, a_2, a_1, a_0] = [2, \frac{1}{2}, -5, 2, -3]
 $$
+
+### Metoda Mullera 2
+Na podstawie wartości wielomianu w zadanym punkcie startowym $x_k$ oraz informacji o jego pierwszej i drugiej pochodnej, MM2 iteracyjnie poprawia położenie do czasu osiągnięcia pierwiasta wielomianu z zadaną dokładnością zgodnie ze wzorem
+$$
+z_{+,-} = \frac{-2f(x_k)}{f'(x_k)\pm\sqrt{(f'(x_k))^2 - 2f(x_k)f''(x_k)}}
+z_{min} = min{z_+, z_-}
+x_{k + 1} = x_k + z_{min}
+$$
+
+Ponieważ pierwiastki wielomianu mogą być wielokrotne i zespolone, należy w metodzie uwzględnić arytmetykę liczb zespolonych.
+Implementacja podstawowego algorytmu MM2 do znajdywania pojedyńczego pierwiastka została zrealizowana w pliku [solverMM2](solverMM2.m).
+
+### Deflacja czynnikiem liniowym
+Jej realizacją jest prosty algorytm implementujący schemat Hornera na podstawie wzoru $q_i = a_i + q_{i + i} * \alpha. Jest on zaimplementowany jako elemnet funkcji [findPolyZeros](findPolyZeros.m).

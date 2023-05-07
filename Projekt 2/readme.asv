@@ -57,9 +57,9 @@ iteracyjnie wyznaczamy najmniejszy przedział taki że jego krańce są przeciwn
 Algorytm izolacji pierwiastków zaimplementowano w pliku [isolation](isolation.m).
 
 ### Rozwiązanie
-Rezultaty uzyskane przez poszczególne solvery reprezentuje tabela i grafika uzyskana na podstawie procedury (plot_Z1)[plot_Z1.m].
+Rezultaty uzyskane przez poszczególne solvery reprezentuje tabela i grafika uzyskana na podstawie procedury [plot_Z1.m](plot_Z1).
 
-!()[Z1.png]
+![](Z1.png)
 
 _*Falsi*_
 | X  | Y  | Iter  | Time  | a  | b  |
@@ -68,11 +68,28 @@ _*Falsi*_
 | 7.5795  |  0.0000 | 100.0000  |  0.0011  |  6.4300  |  7.5800 |
 
 _*Newton*_
-   0.0507 + 0.0000i   0.0000 + 0.0000i   1.0000 + 0.0000i   0.0000 + 0.0000i   0.0100 + 0.0000i
-   0.0507 + 0.0000i   0.0000 + 0.0000i   1.0000 + 0.0000i   0.0000 + 0.0000i   0.0400 + 0.0000i
-   0.0507 + 0.0000i   0.0000 + 0.0000i   1.0000 + 0.0000i   0.0000 + 0.0000i   0.0500 + 0.0000i
-   0.0507 + 0.0000i   0.0000 + 0.0000i   1.0000 + 0.0000i   0.0000 + 0.0000i   0.0600 + 0.0000i
-   0.0758 + 0.0000i   0.0000 + 0.0000i   1.0000 + 0.0000i   0.0000 + 0.0000i   0.0700 + 0.0000i
-   0.0758 + 0.0000i   0.0000 + 0.0000i   1.0000 + 0.0000i   0.0000 + 0.0000i   0.0800 + 0.0000i
-   0.0758 + 0.0000i   0.0000 + 0.0000i   1.0000 + 0.0000i   0.0000 + 0.0000i   0.0900 + 0.0000i
-   
+| X  | Y  | Iter  | Time  | x0 |
+|---|---|---|---|---|
+| 5.0707  | 0.0000  |  100  |  0.0013  |  6 |
+|   7.5795  |  0.0000  | 100  |  0.0001  |  9 |
+
+### Wnioski
+Obie metody sprawnie znalazły miejsca zerowe funkcji, przy podobnej ilości iteracji. Metoda Newtona jest minimalnie szybsza licząc executoin time.
+Metoda Falsi może zawieść (długo zbiegać) jeśli:
+* Jeden z końców przedziałów nie zmienia się przy wielu iteracjach.
+_Rozwiązaniem powyższego problemu byłoby zastosowanie algorytmu Illinois ze zbieżnością superliniową._
+
+Metoda Newtona może zawieść (nie znaleźć najbliższego pierwiastka w otoczeniu) jeśli:
+* Sotsujemy ją poza obszarem atrakcji pierwiastka
+* W okolicy punktu testowego pochoda jest bliska 0 (oddala się wówczas algorytm znacznie od punktu startowego).
+
+## Zadanie 2
+
+### Treść
+Używając metody *Mullera MM2* proszę znaleźć wszystkie pierwiastki wielomianu czwartego stopnia:
+$$
+f(x) = a_{4}x^4 + a_{3}x^3 + a_{2}x^2 + a_{1}x + a_0, [a_4, a_3, a_2, a_1, a_0] = [2, \frac{1}{2}, -5, 2, -3]
+$$
+
+### Metoda Mullera 2
+Na podstawie wartości wielomianu w punkcie startowym oraz informacji 
