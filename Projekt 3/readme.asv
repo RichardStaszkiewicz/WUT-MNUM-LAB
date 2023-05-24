@@ -126,7 +126,7 @@ $$
 Po odjęciu stronami powyższych równań otrzymujemy oszacowanie błędu metody rzędu 4:
 
 $$
-\delta_n(h)=h(z_{n+1}-x_{n+1})=h(\frac{1}{360} k_{1}(h)-\frac{128}{4275} k_{3}(h)-\frac{2197}{75240} k_{4}(h)+\frac{1}{50} k_{5}(h)+\frac{2}{55} k_{6}(h) )
+\delta_n(h)=h(z_{n+1}-x_{n+1})=h(\frac{1}{360} k_{1}(h)-\frac{128}{4275} k_{3}(h)+\frac{71}{1920} k_{4}(h)+\frac{17253}{339200} k_{5}(h)-\frac{22}{525} k_{6}(h)+\frac{1}{40} k_{7}(h))
 $$
 
 
