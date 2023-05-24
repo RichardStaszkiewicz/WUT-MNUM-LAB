@@ -71,7 +71,7 @@ A = \begin{bmatrix}
 1/4 & 0 &     0 &     0 &     0 \\
 3/32 &  9/32 &   0 &     0 &     0 \\
 1932/2197 & -7200/2197  &  7296/2197 &  0 &     0 \\
-438/216 & -8 & 3680/513 & -845/4104 &  0 \\
+439/216 & -8 & 3680/513 & -845/4104 &  0 \\
 -8/27 &  2 &  -3544/2565 & 1859/4104 & -11/40 \\
 \end{bmatrix}
 $$
@@ -129,6 +129,35 @@ $$
 \delta_n(h)=h(z_{n+1}-x_{n+1})=h(\frac{1}{360} k_{1}(h)-\frac{128}{4275} k_{3}(h)-\frac{2197}{75240} k_{4}(h)+\frac{1}{50} k_{5}(h)+\frac{2}{55} k_{6}(h) )
 $$
 
+
+### Wyznaczanie zmienionej długości kroku
+
+W trakcie wyznaczania kolejnego kroku $h_{n+1}$ bierze się pod uwagę niedokładności oszacowania błędu, a także stosuje się współczynnik bezpieczeństwa $s$:
+
+$$
+h_{n+1} = s \alpha h_n, \text{ gdzie s < 1}
+$$
+
+dla RKF zgodnie ze skryptem, przyjmę $s \approx 0.9$. Współczynnik modyfikacji kroku $\alpha$ dla RK4 otrzymuję ze wzoru:
+
+$$
+\alpha = min_{1\le i\le k}(\frac{\varepsilon_i}{|\delta_n(h)_i|})^{\frac{1}{5}}, i = 1, 2, ..., k
+$$
+
+gdzie:
+
+$$
+\varepsilon_i = |(x_i)_n| \varepsilon_w + \varepsilon_b \\
+\varepsilon_w \text{ - dokładność względna} \\
+\varepsilon_b \text{ - dokładność bezwzględna}
+$$
+
+```matlab
+function alpha = stepAlpha(x, epsilonW, epsilonB, delta)
+    epsilon = abs(x) * epsilonW + epsilonB;
+    alpha = min((epsilon ./ abs(delta)) .^ (1/5));
+end
+```
 
 
 
