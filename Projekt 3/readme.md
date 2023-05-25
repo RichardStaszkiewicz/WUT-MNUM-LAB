@@ -151,6 +151,7 @@ Implementacja powyższego obliczania kroku alpha znajduje się w pliku [stepAlph
 ## Rozwiązanie
 Implementację solvera na podstawie schematu ze strony 174 skryptu zrealizowano w pliku [solveRKF](solveRKF.m).
 
+### Badanie trajektorii
 Uruchomiono solverRKF i porównano go z rezultatami funkcji ode45 udostępnionej przez matlaba. Otrzymano następujące rezultaty:
 ```
 >> plot_trajectories
@@ -164,6 +165,32 @@ ode45		|	109
 RKF45	    |	592
 ```
 ![](trajektorie.png)
+
+Implementacja powyższego badania trajektorii znajduje się w pliku [plot_trajectories](plot_trajectories).
+
+### Długość kroku  i estymata błędu vs czas
+
+Zbadano graficznie przebiegi czasowe długości kroku i estymat błędu względnego i bezwzględnego w solverze RKF i otrzymano następujące rezultaty:
+![](step_error_time)
+
+Implementacja wyświetlania powyższych przebiegów znajduje się w pliku [plot_step_error_time](plot_step_error_time.m)
+
+
+## Wnioski
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Pliki
 
 ### dxdt.m
@@ -279,5 +306,104 @@ function [tout, xout, hout, dout] = solveRKF(dxdt, tspan, x0, h0, hmin, epsilonW
             end
         end
     end
+end
+```
+
+### plot_trajectories.m
+```matlab
+function plot_trajectories()
+    x0 = [0.4; 0.3];
+    time_span = [0 20];
+    h0 = 1e-4;
+    hmin = 1e-6;
+    epsilonW = 1e-8;
+    epsilonB = 1e-8;
+
+    disp("ode45:");
+    tic;
+    [tode, xode] = ode45(@dxdt, time_span, x0);
+    toc
+    disp("RKF45:");
+    tic;
+    [tdp, xdp, ~, ~] = solveRKF(@dxdt, time_span, x0, h0, hmin, epsilonW, epsilonB);
+    toc
+
+    fprintf('function\t|\titerations\n');
+    fprintf('-\t\t\t|\t-\n');
+    todesize = size(tode);
+    tdpsize = size(tdp);
+    fprintf('ode45\t\t|\t%0.f\n', [todesize(1)]);
+    fprintf('RKF45\t|\t%0.f\n', [tdpsize(1)]);
+
+    tiledlayout(2, 2);
+    
+    % Trajektoria x_1(t)
+    nexttile;
+    hold on;
+    title('Trajektoria x_1(t)');
+    xlabel('t');
+    ylabel('x_1(t)');
+    plot(tode, xode(:, 1));
+    plot(tdp, xdp(:, 1));
+    legend('ode45', 'RKF45');
+    hold off;
+
+    % Trajektoria na płaszczyźnie (x_1, x_2)
+    nexttile([2, 1]);
+    hold on;
+    title('Trajektoria (x_1, x_2)');
+    xlabel('x_1');
+    ylabel('x_2');
+    plot(xode(:, 1), xode(:, 2));
+    plot(xdp(:, 1), xdp(:, 2));
+    legend('ode45', 'RKF45');
+    hold off;
+
+    % Trajektoria x_2(t)
+    nexttile;
+    hold on;
+    title('Trajektoria x_2(t)');
+    xlabel('t');
+    ylabel('x_2(t)');
+    plot(tode, xode(:, 2));
+    plot(tdp, xdp(:, 2));
+    legend('ode45', 'RKF45');
+    hold off;
+end
+```
+
+### plot_step_error_time.m
+```matlab
+function plot_step_error_time()
+    x0 = [0.4; 0.3];
+    time_span = [0 20];
+    h0 = 1e-4;
+    hmin = 1e-6;
+    epsilonW = 1e-8;
+    epsilonB = 1e-8;
+
+
+    [tdp, ~, hdp, ddp] = solveRKF(@dxdt, time_span, x0, h0, hmin, epsilonW, epsilonB);
+    
+    tiledlayout(2, 1);
+    
+    % Zależność długości kroku od czasu
+    nexttile;
+    hold on;
+    title('Step vs time');
+    xlabel('t');
+    ylabel('h(t)');
+    plot(tdp, hdp);
+    hold off;
+
+    % Zależność estymaty błędu od czasu
+    nexttile;
+    hold on;
+    title('Error vs time');
+    xlabel('t');
+    ylabel('delta_n(t)');
+    plot(tdp, ddp(:, 1));
+    plot(tdp, ddp(:, 2));
+    hold off;
 end
 ```
