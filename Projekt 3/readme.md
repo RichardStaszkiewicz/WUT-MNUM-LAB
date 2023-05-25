@@ -200,14 +200,6 @@ z algorytmicznego punktu widzenia zaprojektowany pod współpracę ze środowisk
 
 
 
-
-
-
-
-
-
-
-
 ## Pliki
 
 ### dxdt.m
@@ -245,37 +237,6 @@ end
 ### solveRKF.m
 ```matlab
 function [tout, xout, hout, dout] = solveRKF(dxdt, tspan, x0, h0, hmin, epsilonW, epsilonB)
-    %   ========= REALIZACJA ZGODNIE Z AUTOMATEM ZE STRONY 174 SKRYPTU ====
-    %
-    %
-    %   CEL
-    %       Wyznaczanie rozwiązania układu równań różniczkowych zwyczajnych
-    %       przy podanej wartości rozwiązania w punkcie początkowym
-    %  
-    %   PARAMETRY WEJSCIOWE
-    %       dxdt   -  funkcja przyjmująca jako parametry czas oraz wartości
-    %                 w punkcie, a zwracająca pochodną dx/dt 
-    %       t0     -  wektor dwu wartościowy - przedział poszukiwania
-    %                 rozwiązania
-    %       x0     -  wektor punktów startowych  
-    %       h0     -  początkowa wartość kroku
-    %       hmin   -  ustalona minimalna wielkość kroku - poniżej tego
-    %                 kroku kończymy program - uznajemy, że nie da się
-    %                 znaleźć wyniku z zadaną dokładnością
-    %       epsilonW - wartość dozwolonego błędu względnego
-    %       epsilonB - wartość dozwolonego błędu bezwzględnego
-    %
-    %   PARAMETRY WYJSCIOWE
-    %       tout   -  wektor kolejnych wartości czasu t 
-    %       xout   -  macierz kolejnych wartości x w kolejnych iteracjach
-    %                 algorytmu
-    %       hout   -  wektor kroków w kolejnych iteracjach algorytmu
-    %       dout   -  macierz szacowanych błędów dla wartości x w kolejnych
-    %                 iteracjach algorytmu
-    %
-    %   PRZYKLADOWE WYWOLANIE
-    %       >> [tout, xout, hout, dout] = dorpri45(@trajectory, [0 20], [0; 13], 1e-4, 1e-6, 1e-8, 1e-8)
-    %
     % STAŁE
     s = 0.9;
     % ZMIENNE
@@ -353,8 +314,7 @@ function plot_trajectories()
     fprintf('RKF45\t|\t%0.f\n', [tdpsize(1)]);
 
     tiledlayout(2, 2);
-    
-    % Trajektoria x_1(t)
+
     nexttile;
     hold on;
     title('Trajektoria x_1(t)');
@@ -365,7 +325,6 @@ function plot_trajectories()
     legend('ode45', 'RKF45');
     hold off;
 
-    % Trajektoria na płaszczyźnie (x_1, x_2)
     nexttile([2, 1]);
     hold on;
     title('Trajektoria (x_1, x_2)');
@@ -376,7 +335,6 @@ function plot_trajectories()
     legend('ode45', 'RKF45');
     hold off;
 
-    % Trajektoria x_2(t)
     nexttile;
     hold on;
     title('Trajektoria x_2(t)');
@@ -403,8 +361,7 @@ function plot_step_error_time()
     [tdp, ~, hdp, ddp] = solveRKF(@dxdt, time_span, x0, h0, hmin, epsilonW, epsilonB);
     
     tiledlayout(2, 1);
-    
-    % Zależność długości kroku od czasu
+
     nexttile;
     hold on;
     title('Step vs time');
@@ -413,7 +370,6 @@ function plot_step_error_time()
     plot(tdp, hdp);
     hold off;
 
-    % Zależność estymaty błędu od czasu
     nexttile;
     hold on;
     title('Error vs time');
