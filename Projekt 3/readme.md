@@ -2,7 +2,7 @@
 _Richard Staszkiewicz_
 _idx. 310918_
 
-# Treść
+## Treść
 Ruch punktu na płaszczyźnie ($x_1$, $x_2$) jest opisany równaniami:
 
 $$
@@ -21,14 +21,7 @@ Rungego–Kutty-Fehlberga czwartego rzędu przy zmiennym kroku z szacowaniem bł
 techniką pary metod włożonych (RKF45)
 
 ## Równania trajektorii
-```matlab
-function dxdt = dxdt(t, x)
-    dx1dt = x(2) + x(1) * (0.3 - x(1)^2 - x(2)^2);
-    dx2dt = -x(1) + x(2) * (0.3 - x(1)^2 - x(2)^2);
-
-    dxdt = [dx1dt; dx2dt];
-end
-```
+Równania trajektorii zostały zaimplementowane w pliku [dxdt](dxdt.m)
 
 ## Algorytmy
 
@@ -129,6 +122,7 @@ $$
 \delta_n(h)=h(z_{n+1}-x_{n+1})=h(\frac{1}{360} k_{1}(h)-\frac{128}{4275} k_{3}(h)-\frac{2197}{75240} k_{4}(h)+\frac{1}{50} k_{5}(h)+\frac{2}{55} k_{6}(h) )
 $$
 
+Implementacja kroku solvera posługującego się powyższymi równaniami znajduje się w pliku [makeStep](makeStep.m)
 
 ### Wyznaczanie zmienionej długości kroku
 
@@ -152,6 +146,51 @@ $$
 \varepsilon_b \text{ - dokładność bezwzględna}
 $$
 
+Implementacja powyższego obliczania kroku alpha znajduje się w pliku [stepAlpha](stepAlpha.m).
+
+## Rozwiązanie
+Implementację solvera na podstawie schematu ze strony 174 skryptu zrealizowano w pliku [solveRKF](solveRKF.m).
+
+Uruchomiono solverRKF i porównano go z rezultatami funkcji ode45 udostępnionej przez matlaba. Otrzymano następujące rezultaty:
+```
+>> plot_trajectories
+ode45:
+Elapsed time is 0.051435 seconds.
+RKF45:
+Elapsed time is 0.135765 seconds.
+function	|	iterations
+-			|	-
+ode45		|	109
+RKF45	    |	592
+```
+![](trajektorie.png)
+## Pliki
+
+### dxdt.m
+```matlab
+function dxdt = dxdt(t, x)
+    dx1dt = x(2) + x(1) * (0.3 - x(1)^2 - x(2)^2);
+    dx2dt = -x(1) + x(2) * (0.3 - x(1)^2 - x(2)^2);
+
+    dxdt = [dx1dt; dx2dt];
+end
+```
+
+### makeStep.m
+```matlab
+function [x2, delta] = makeStep(f, t, x1, h)
+    k1 = h * f(t, x1);
+    k2 = h * f(t + 1/4 * h,     x1 + 1/4 * k1);
+    k3 = h * f(t + 3/8 * h,     x1 + 3/32 * k1          + 9/32 * k2);
+    k4 = h * f(t + 12/13 * h,   x1 + 1932/2197 * k3     - 7200/2197 * k2    + 7296/2197 * k3);
+    k5 = h * f(t + h,           x1 + 439/216 * k1       - 8 * k2            + 3680/513 * k3     - 845/4104 * k4);
+    k6 = h * f(t + 1/2 * h,     x1 - 8/27 * k1          + 2 * k2            - 3544/2565 * k3    + 1859/4104 * k4       - 11/40 * k5);
+
+    x2 = x1 + 25/216 * k1 + 1408/2565 * k3 + 2197/4104 * k4 - 1/5 * k5;
+    delta = h * (1/360 * k1 - 128/4275 * k3 - 2197/75240 * k4 + 1/50 * k5 + 2/55 * k6);
+end
+```
+### stepAlpha.m
 ```matlab
 function alpha = stepAlpha(x, epsilonW, epsilonB, delta)
     epsilon = abs(x) * epsilonW + epsilonB;
@@ -159,6 +198,86 @@ function alpha = stepAlpha(x, epsilonW, epsilonB, delta)
 end
 ```
 
+### solveRKF.m
+```matlab
+function [tout, xout, hout, dout] = solveRKF(dxdt, tspan, x0, h0, hmin, epsilonW, epsilonB)
+    %   ========= REALIZACJA ZGODNIE Z AUTOMATEM ZE STRONY 174 SKRYPTU ====
+    %
+    %
+    %   CEL
+    %       Wyznaczanie rozwiązania układu równań różniczkowych zwyczajnych
+    %       przy podanej wartości rozwiązania w punkcie początkowym
+    %  
+    %   PARAMETRY WEJSCIOWE
+    %       dxdt   -  funkcja przyjmująca jako parametry czas oraz wartości
+    %                 w punkcie, a zwracająca pochodną dx/dt 
+    %       t0     -  wektor dwu wartościowy - przedział poszukiwania
+    %                 rozwiązania
+    %       x0     -  wektor punktów startowych  
+    %       h0     -  początkowa wartość kroku
+    %       hmin   -  ustalona minimalna wielkość kroku - poniżej tego
+    %                 kroku kończymy program - uznajemy, że nie da się
+    %                 znaleźć wyniku z zadaną dokładnością
+    %       epsilonW - wartość dozwolonego błędu względnego
+    %       epsilonB - wartość dozwolonego błędu bezwzględnego
+    %
+    %   PARAMETRY WYJSCIOWE
+    %       tout   -  wektor kolejnych wartości czasu t 
+    %       xout   -  macierz kolejnych wartości x w kolejnych iteracjach
+    %                 algorytmu
+    %       hout   -  wektor kroków w kolejnych iteracjach algorytmu
+    %       dout   -  macierz szacowanych błędów dla wartości x w kolejnych
+    %                 iteracjach algorytmu
+    %
+    %   PRZYKLADOWE WYWOLANIE
+    %       >> [tout, xout, hout, dout] = dorpri45(@trajectory, [0 20], [0; 13], 1e-4, 1e-6, 1e-8, 1e-8)
+    %
+    % STAŁE
+    s = 0.9;
+    % ZMIENNE
+    x1 = x0;
+    t1 = tspan(1);
+    tmax = tspan(2);
+    h1 = h0;
+    % WYJŚCIE
+    tout = t1;
+    xout = x1';
+    hout = h1;
+    dout = zeros(length(x0));
+    n = 1;
 
+    while true
+        [x2, delta] = makeStep(dxdt, t1, x1, h1);
+        alpha = stepAlpha(x1, epsilonW, epsilonB, delta);
 
+        axs = s * alpha;
+        hstar = axs * h1;
 
+        if axs >= 1
+            if t1 + h1 >= tmax
+                return; % osiągnięty koniec przedziału
+            else
+                t2 = t1 + h1;
+                h2 = min([hstar, 5 * h1, tmax - t1]); %  ograniczenie jako heura, beta = 5
+                n = n + 1;
+
+                tout(n, 1) = t2;
+                xout(n, :) = x2';
+                hout(n, 1) = h2;
+                dout(n, :) = delta';
+
+                t1 = t2;
+                x1 = x2;
+                h1 = h2;
+            end
+        else % zmniejszanie kroku
+            if hstar < hmin
+                disp("Impossible to solve with given precision"); % osiągnięty krok jest mniejszy niż zadany najmniejszy krok
+                return;
+            else
+                h1 = hstar; % zmniejszenie kroku
+            end
+        end
+    end
+end
+```
