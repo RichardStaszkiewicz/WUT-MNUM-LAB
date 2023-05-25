@@ -28,26 +28,26 @@ Równania trajektorii zostały zaimplementowane w pliku [dxdt](dxdt.m)
 ### Metoda Rungego–Kutty-Fehlberga
 
 Metoda RKF bierze pod uwagę parę metod włożonych. W tym konkretnym wypadku, są to metody RK odpowiednio czwartego oraz piątego rzędu.
-- Metoda RK rzędu czwartego (6 etapowa):
+- Metoda RK rzędu czwartego (5 etapowa):
 $$
-x_{n+1} = x_n + h \sum_{i=1}^6 w_i^* k_i
+x_{n+1} = x_n + h \sum_{i=1}^5 w_i^* k_i
+$$
+$$
+k_1 = f(t_n, x_n)
+$$
+$$
+k_i = f(t_n + c_i h, x_n + h  \sum_{j=1}^{i-1} a_{ij}k_j), \text{dla i=2,3,...5}
+$$
+
+- Metoda RK rzędu 5 (6 etapowa):
+$$
+x_{n+1} = x_n + h \sum_{i=1}^{6} w_i^* k_i
 $$
 $$
 k_1 = f(t_n, x_n)
 $$
 $$
 k_i = f(t_n + c_i h, x_n + h  \sum_{j=1}^{i-1} a_{ij}k_j), \text{dla i=2,3,...6}
-$$
-
-- Metoda RK rzędu 5 (7 etapowa):
-$$
-x_{n+1} = x_n + h \sum_{i=1}^{7} w_i^* k_i
-$$
-$$
-k_1 = f(t_n, x_n)
-$$
-$$
-k_i = f(t_n + c_i h, x_n + h  \sum_{j=1}^{i-1} a_{ij}k_j), \text{dla i=2,3,...7}
 $$
 
 W obu metodach współczynniki $w_i^*$ i $w_i$ są różne, ale równe są współczynniki $c_i$ oraz $a_{ij}$ dla $j = 1, ..., i-1, i = 2, ..., m$. Wobec powyższego $k_i$ są równe dla $i = 1,..., m$.
@@ -187,8 +187,16 @@ Implementacja wyświetlania powyższych przebiegów znajduje się w pliku [plot_
 
 ### Porównanie z ode45
 
+| **Kategoria** | **RKF45** | **ODE45** | **Porównanie** |
+| :---: | :---: | :---: | :---: |
+| **Poprawność** | Znalazł poprawny wynik | Znalazł poprawny wynik | Takie same |
+| **Efektywność** | 592 kroki | 109 kroków | ODE45 znalazł rozwiązanie w zauważalnie mniejszej ilości kroków |
+| **Szybkość** | 0.05 s | 0.13 s | ODE45 szybciej doszło do rozwiązania |
 
 
+ODE45 bazując na metodzie Dormanda-Prince'a potrzebuje mniej kroków by znaleźć rozwiązanie.
+Wyniki czasowe uważam za nieinterpretowalne, ponieważ mimo wyraźnej przewagi solvera ODE45, został on również
+z algorytmicznego punktu widzenia zaprojektowany pod współpracę ze środowiskiem MATLAB.
 
 
 
