@@ -171,12 +171,21 @@ Implementacja powyższego badania trajektorii znajduje się w pliku [plot_trajec
 ### Długość kroku  i estymata błędu vs czas
 
 Zbadano graficznie przebiegi czasowe długości kroku i estymat błędu względnego i bezwzględnego w solverze RKF i otrzymano następujące rezultaty:
-![](step_error_time)
+![](step_error_time.png)
 
 Implementacja wyświetlania powyższych przebiegów znajduje się w pliku [plot_step_error_time](plot_step_error_time.m)
 
 
 ## Wnioski
+
+### Parametry
+* Minimalny krok wyznacza otoczenie rozpatrywanego punktu, w którym nie może być rozpatrywana
+ następna iteracja algorytmu, zapobiegając tym samym "utknięciu" na skutek ciągłego zmniejszania kroku.
+* Dokładność względna jest miarą tolerancji między rozwiązaniem a propozycją algorytmu i zależy od wartości funkcji w danym punkcie.
+* Dokładność bezwzględna jest miarą tolerancji między rozwiązaniem a propozycją algorytmu i nie zależy od wartości funkcji w danym punkcie.
+* Dokładność bezwzględna ma większe znaczenie dla wartości bliższych 0, podczas gdy dokładność względna gra większą rolę przy wartościach większych.
+
+### Porównanie z ode45
 
 
 

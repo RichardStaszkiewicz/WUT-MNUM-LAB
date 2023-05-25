@@ -171,13 +171,16 @@ Implementacja powyższego badania trajektorii znajduje się w pliku [plot_trajec
 ### Długość kroku  i estymata błędu vs czas
 
 Zbadano graficznie przebiegi czasowe długości kroku i estymat błędu względnego i bezwzględnego w solverze RKF i otrzymano następujące rezultaty:
-![](step_error_time)
+![](step_error_time.png)
 
 Implementacja wyświetlania powyższych przebiegów znajduje się w pliku [plot_step_error_time](plot_step_error_time.m)
 
 
+## Wnioski
 
-
+### Eksperymenty z różnymi parametrami minimalnego kroku
+Minimalny krok wyznacza otoczenie rozpatrywanego punktu, w którym nie może być rozpatrywana
+ następna iteracja algorytmu, zapobiegając tym samym "utknięciu" na skutek ciąg
 
 
 
@@ -372,7 +375,7 @@ function plot_trajectories()
 end
 ```
 
-###
+### plot_step_error_time.m
 ```matlab
 function plot_step_error_time()
     x0 = [0.4; 0.3];
